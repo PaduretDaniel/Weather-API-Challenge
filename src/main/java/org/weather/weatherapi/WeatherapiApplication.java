@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.weather.weatherapi.services.ForecastService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,12 @@ public class WeatherapiApplication {
 
         var forecaster = context.getBean(ForecastService.class);
 
-        cities.forEach(forecaster::fetchForecast);
+        cities.forEach(c -> {
+            try {
+                System.out.println(forecaster.fetchForecast(c));
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
-
 }

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: Weatherapi
+
+weather:
+  api:
+    key: ${WEATHER_API_KEY}
+  main-url: http://api.weatherapi.com/v1/forecast.json
