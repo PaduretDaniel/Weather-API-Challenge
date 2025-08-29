@@ -10,10 +10,17 @@ import java.util.List;
 @Service
 public class ForecastMapper {
     public ForecastDto mapToForecastDto(JsonNode root){
+
+        JsonNode forecastNode = root.path("forecast").path("forecastday");
+        if (forecastNode.isMissingNode() || !forecastNode.isArray() || forecastNode.size() < 2) {
+            throw new RuntimeException("Missing Data in Weather API JSON or is malformed");
+        }
+
         ForecastDto forecastDto = new ForecastDto();
         forecastDto.setCity(root.path("location").path("name").asText());
         forecastDto.setDate(LocalDate.parse(root.path("forecast").path("forecastday").get(1).path("date").asText()));
-        JsonNode tomorrow = root.path("forecast").path("forecastday").get(1).path("day");
+
+        JsonNode tomorrow = forecastNode.get(1).path("day");
         forecastDto.setMinTempC(tomorrow.path("mintemp_c").asDouble());
         forecastDto.setMaxTempC(tomorrow.path("maxtemp_c").asDouble());
         forecastDto.setHumidity(tomorrow.path("avghumidity").asLong());
