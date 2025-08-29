@@ -13,10 +13,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.weather.weatherapi.dtos.ForecastDto;
-import static org.weather.weatherapi.mappers.ForecastMapper.mapToForecastDto;
+import org.weather.weatherapi.mappers.ForecastMapper;
 
 @Service
 public class ForecastService {
+
+    ForecastMapper forecastMapper = new ForecastMapper();
 
     @Value("${weather.api.key}")
     private String apiKey;
@@ -37,7 +39,7 @@ public class ForecastService {
 
         HttpResponse<String> res = http.send(req, HttpResponse.BodyHandlers.ofString());
         JsonNode root = mapper.readTree(res.body());
-        return mapToForecastDto(root);
+        return forecastMapper.mapToForecastDto(root);
     }
 
 }
