@@ -38,7 +38,13 @@ public class ForecastService {
                 .build();
 
         HttpResponse<String> res = http.send(req, HttpResponse.BodyHandlers.ofString());
+        if (res.statusCode() != 200) {
+            throw new RuntimeException("Weather API returned error for " + city +  " : "
+                    + res.statusCode() + " body=" + res.body());
+        }
+
         JsonNode root = mapper.readTree(res.body());
+
         return forecastMapper.mapToForecastDto(root);
     }
 
